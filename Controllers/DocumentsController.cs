@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using WebAPI.Handlers;
+using WebAPI.Handlers.Document.GetDocument;
+using WebAPI.Handlers.Document.SaveDocument;
 
 namespace WebAPI.Controllers
 {
@@ -8,36 +10,31 @@ namespace WebAPI.Controllers
     [ApiController]
     public class DocumentsController : ControllerBase
     {
-        // GET: api/<DocumentsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IMediator _mediator;
+
+        public DocumentsController(IMediator mediator)
         {
-            return new string[] { "value1", "value2" };
+            _mediator = mediator;
         }
 
-        // GET api/<DocumentsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<DocumentsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public Task<Response> SaveDocument(SaveDocumentRequest request)
         {
+            request.Document.OperationType = Models.OperationType.Add;
+            return _mediator.Send(request);
         }
 
-        // PUT api/<DocumentsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public Task<Response> UpdateDocument(SaveDocumentRequest request)
         {
+            request.Document.OperationType = Models.OperationType.Update;
+            return _mediator.Send(request);
         }
 
-        // DELETE api/<DocumentsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet("{id}")]
+        public Task<GetDocumentResponse> GetDocument(int id)
         {
+            return _mediator.Send(new GetDocumentRequest { Id = id });
         }
     }
 }
