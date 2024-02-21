@@ -1,5 +1,6 @@
 ﻿namespace WebAPI.Models
 {
+    [Serializable]
     public class Document
     {
         public int Id { get; set; }

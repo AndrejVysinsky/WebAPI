@@ -6,6 +6,7 @@ using WebAPI.Handlers.Document.SaveDocument;
 using WebAPI.Handlers.Document.Validation;
 using WebAPI.Models;
 using WebAPI.Repositories;
+using WebAPI.Serializers;
 
 namespace WebAPI
 {
@@ -20,17 +21,21 @@ namespace WebAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddMemoryCache();
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddScoped<IValidator<Document>, DocumentValidator>();
             builder.Services.AddScoped<IValidator<SaveDocumentRequest>, SaveDocumentRequestValidator>();
             builder.Services.AddScoped<IValidator<GetDocumentRequest>, GetDocumentRequestValidator>();
 
             builder.Services.AddScoped<IDocumentRepository, JsonDocumentRepository>();
+            
+            builder.Services.AddScoped<ISerializer, JsonSerializer>();
 
             builder.Services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssemblyContaining<Program>();
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(MinimalValidationBehavior<,>));
             });
 
             var app = builder.Build();

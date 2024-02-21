@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public Task<GetDocumentResponse> GetDocument(int id)
+        public Task<string> GetDocument(int id)
         {
             return _mediator.Send(new GetDocumentRequest { Id = id });
         }
