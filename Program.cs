@@ -29,7 +29,7 @@ namespace WebAPI
             builder.Services.AddScoped<IValidator<SaveDocumentRequest>, SaveDocumentRequestValidator>();
             builder.Services.AddScoped<IValidator<GetDocumentRequest>, GetDocumentRequestValidator>();
 
-            builder.Services.AddScoped<IDocumentRepository, JsonDocumentRepository>();
+            builder.Services.AddSingleton<IDocumentRepository, JsonDocumentRepository>();
             
             builder.Services.AddScoped<ISerializer, JsonSerializer>();
 
