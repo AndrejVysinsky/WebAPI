@@ -14,7 +14,7 @@ namespace WebAPI.Handlers.Document.SaveDocument
 
         public async Task<Response> Handle(SaveDocumentRequest request, CancellationToken cancellationToken)
         {
-            if (request.Document.OperationType == Models.OperationType.Add)
+            if (request.Document.OperationType == Domain.OperationType.Add)
             {
                 await _documentRepository.SaveDocument(request.Document.Object);
             }

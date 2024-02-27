@@ -2,6 +2,6 @@
 {
     public class GetDocumentResponse : Response
     {
-        public Models.Document Document { get; set; } = new();
+        public Domain.Document Document { get; set; } = new();
     }
 }

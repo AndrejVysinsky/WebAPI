@@ -3,7 +3,7 @@ using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.Validation
 {
-    public class DocumentValidator : AbstractValidator<Models.Document>
+    public class DocumentValidator : AbstractValidator<Domain.Document>
     {
         private readonly IDocumentRepository _documentRepository;
 

@@ -4,7 +4,7 @@ using WebAPI.Behaviors;
 using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Handlers.Document.SaveDocument;
 using WebAPI.Handlers.Document.Validation;
-using WebAPI.Models;
+using WebAPI.Domain;
 using WebAPI.Repositories;
 using WebAPI.Serializers;
 
@@ -22,6 +22,8 @@ namespace WebAPI
 
             builder.Services.AddMemoryCache();
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.Configure<JsonDocumentSettings>(builder.Configuration.GetSection(JsonDocumentSettings.Key));
 
             builder.Services.AddScoped<IValidator<Document>, DocumentValidator>();
             builder.Services.AddScoped<IValidator<SaveDocumentRequest>, SaveDocumentRequestValidator>();

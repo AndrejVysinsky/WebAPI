@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
-using WebAPI.Models;
+using WebAPI.Domain;
 
 namespace WebAPI.Repositories
 {
@@ -9,12 +10,12 @@ namespace WebAPI.Repositories
         private readonly string _filePath;
         private readonly IMemoryCache _cache;
 
-        public JsonDocumentRepository(IMemoryCache cache, IConfiguration configuration)
+        public JsonDocumentRepository(IMemoryCache cache, IOptions<JsonDocumentSettings> settings)
         {
             _cache = cache;
 
-            var storagePath = configuration["JsonStoragePath"] ?? string.Empty;
-            var fileName = configuration["JsonFileName"] ?? string.Empty;
+            var storagePath = settings.Value.StoragePath;
+            var fileName = settings.Value.FileName;
             _filePath = Path.Combine(storagePath, $"{fileName}.json");
 
             if (!Directory.Exists(storagePath))
