@@ -4,9 +4,10 @@ using WebAPI.Behaviors;
 using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Handlers.Document.SaveDocument;
 using WebAPI.Handlers.Document.Validation;
-using WebAPI.Domain;
 using WebAPI.Repositories;
 using WebAPI.Serializers;
+using WebAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI
 {
@@ -24,12 +25,18 @@ namespace WebAPI
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.Configure<JsonDocumentSettings>(builder.Configuration.GetSection(JsonDocumentSettings.Key));
+            
+            var connectionString = builder.Configuration.GetConnectionString("AzureSqlConnection");
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
 
-            builder.Services.AddScoped<IValidator<Document>, DocumentValidator>();
+            builder.Services.AddScoped<IDocumentRepository, JsonDocumentRepository>();
+
+            builder.Services.AddScoped<IValidator<Domain.Document>, DocumentValidator>();
             builder.Services.AddScoped<IValidator<SaveDocumentRequest>, SaveDocumentRequestValidator>();
             builder.Services.AddScoped<IValidator<GetDocumentRequest>, GetDocumentRequestValidator>();
-
-            builder.Services.AddSingleton<IDocumentRepository, JsonDocumentRepository>();
             
             builder.Services.AddScoped<ISerializer, JsonSerializer>();
 
