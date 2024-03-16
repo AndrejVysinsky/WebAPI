@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Handlers;
 using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Handlers.Document.SaveDocument;
+using WebAPI.Handlers.Document.UpdateDocument;
 
 namespace WebAPI.Controllers
 {
@@ -18,21 +18,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public Task<Response> SaveDocument(SaveDocumentRequest request)
+        public Task<int> SaveDocument(SaveDocumentRequest request)
         {
-            request.Document.OperationType = Domain.OperationType.Add;
             return _mediator.Send(request);
         }
 
         [HttpPut]
-        public Task<Response> UpdateDocument(SaveDocumentRequest request)
+        public Task<int> UpdateDocument(UpdateDocumentRequest request)
         {
-            request.Document.OperationType = Domain.OperationType.Update;
             return _mediator.Send(request);
         }
 
         [HttpGet("{id}")]
-        public Task<string> GetDocument(int id)
+        public Task<GetDocumentResponse> GetDocument(int id)
         {
             return _mediator.Send(new GetDocumentRequest { Id = id });
         }

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace WebAPI.Handlers.Document.SaveDocument
+namespace WebAPI.Handlers.Document.UpdateDocument
 {
-    public class SaveDocumentRequest : IRequest<int>
+    public class UpdateDocumentRequest : IRequest<int>
     {
         public int DocumentId { get; set; }
         public List<string> Tags { get; set; } = [];

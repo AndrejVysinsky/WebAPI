@@ -3,11 +3,12 @@ using MediatR;
 using WebAPI.Behaviors;
 using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Handlers.Document.SaveDocument;
-using WebAPI.Handlers.Document.Validation;
 using WebAPI.Repositories;
 using WebAPI.Serializers;
 using WebAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Handlers.Document.UpdateDocument;
+using WebAPI.Processors;
 
 namespace WebAPI
 {
@@ -32,10 +33,10 @@ namespace WebAPI
                 options.UseSqlServer(connectionString);
             });
 
-            builder.Services.AddScoped<IDocumentRepository, JsonDocumentRepository>();
+            builder.Services.AddScoped<IDocumentRepository, DbDocumentRepository>();
 
-            builder.Services.AddScoped<IValidator<Domain.Document>, DocumentValidator>();
             builder.Services.AddScoped<IValidator<SaveDocumentRequest>, SaveDocumentRequestValidator>();
+            builder.Services.AddScoped<IValidator<UpdateDocumentRequest>, UpdateDocumentRequestValidator>();
             builder.Services.AddScoped<IValidator<GetDocumentRequest>, GetDocumentRequestValidator>();
             
             builder.Services.AddScoped<ISerializer, JsonSerializer>();
@@ -44,7 +45,6 @@ namespace WebAPI
             {
                 config.RegisterServicesFromAssemblyContaining<Program>();
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(MinimalValidationBehavior<,>));
             });
 
             var app = builder.Build();
@@ -67,6 +67,7 @@ namespace WebAPI
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ValidationMappingMiddleware>();
 
             app.MapControllers();
 

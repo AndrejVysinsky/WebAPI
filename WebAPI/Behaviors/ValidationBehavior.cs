@@ -1,13 +1,11 @@
 ﻿using FluentValidation.Results;
 using FluentValidation;
 using MediatR;
-using WebAPI.Handlers;
 
 namespace WebAPI.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
-        where TResponse : Response
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -33,9 +31,7 @@ namespace WebAPI.Behaviors
 
                 if (failures.Count != 0)
                 {
-                    var response = Activator.CreateInstance<TResponse>();
-                    response.Faults = failures;
-                    return response;
+                    throw new ValidationException(failures);
                 }
             }
 

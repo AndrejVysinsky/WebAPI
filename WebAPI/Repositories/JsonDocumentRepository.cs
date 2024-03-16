@@ -5,7 +5,7 @@ using WebAPI.Domain;
 
 namespace WebAPI.Repositories
 {
-    public class JsonDocumentRepository : IDocumentRepository
+    public class JsonDocumentRepository
     {
         private readonly string _filePath;
         private readonly IMemoryCache _cache;

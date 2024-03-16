@@ -3,7 +3,7 @@ using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.SaveDocument
 {
-    public class SaveDocumentHandler : IRequestHandler<SaveDocumentRequest, Response>
+    public class SaveDocumentHandler : IRequestHandler<SaveDocumentRequest, int>
     {
         private readonly IDocumentRepository _documentRepository;
 
@@ -12,19 +12,18 @@ namespace WebAPI.Handlers.Document.SaveDocument
             _documentRepository = documentRepository;
         }
 
-        public async Task<Response> Handle(SaveDocumentRequest request, CancellationToken cancellationToken)
+        public async Task<int> Handle(SaveDocumentRequest request, CancellationToken cancellationToken)
         {
-            if (request.Document.OperationType == Domain.OperationType.Add)
+            var document = new Data.Document()
             {
-                await _documentRepository.SaveDocument(request.Document.Object);
-            }
-            else
-            {
-                await _documentRepository.UpdateDocument(request.Document.Object);
-            }
+                DocumentId = request.DocumentId,
+                Tags = string.Join(",", request.Tags),
+                Data = request.Data.ToString()
+            };
 
-            var response = new Response();
-            return response;
+            await _documentRepository.SaveDocument(document);
+
+            return document.DocumentId;
         }
     }
 }

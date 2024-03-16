@@ -1,12 +1,26 @@
 ﻿using FluentValidation;
+using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.GetDocument
 {
     public class GetDocumentRequestValidator : AbstractValidator<GetDocumentRequest>
     {
-        public GetDocumentRequestValidator(IValidator<Domain.Document> validator)
+        private readonly IDocumentRepository _repository;
+
+        public GetDocumentRequestValidator(IDocumentRepository documentRepository)
         {
-            RuleFor(x => new Domain.Document() { Id = x.Id }).SetValidator(validator, "OnGet");
+            _repository = documentRepository;
+
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .Must(Exists)
+                .WithMessage("Document id does not exist.");
+        }
+
+        private bool Exists(int id)
+        {
+            var document = _repository.GetDocument(id).Result;
+            return document != null;
         }
     }
 }

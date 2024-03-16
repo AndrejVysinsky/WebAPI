@@ -1,31 +1,30 @@
 ﻿using FluentValidation;
-using WebAPI.Domain;
 using WebAPI.Repositories;
 
-namespace WebAPI.Handlers.Document.SaveDocument
+namespace WebAPI.Handlers.Document.UpdateDocument
 {
-    public class SaveDocumentRequestValidator : AbstractValidator<SaveDocumentRequest>
+    public class UpdateDocumentRequestValidator : AbstractValidator<UpdateDocumentRequest>
     {
         private readonly IDocumentRepository _repository;
 
-        public SaveDocumentRequestValidator(IDocumentRepository documentRepository)
+        public UpdateDocumentRequestValidator(IDocumentRepository documentRepository)
         {
             _repository = documentRepository;
 
             RuleFor(x => x.DocumentId)
                 .NotEmpty()
-                .Must(NotExists)
-                .WithMessage("Document id already exists.");
+                .Must(Exists)
+                .WithMessage("Document id does not exist.");
 
             RuleFor(x => x.Tags).NotEmpty();
 
             RuleFor(x => x.Data).NotEmpty();
         }
 
-        private bool NotExists(int id)
+        private bool Exists(int id)
         {
             var document = _repository.GetDocument(id).Result;
-            return document == null;
+            return document != null;
         }
     }
 }

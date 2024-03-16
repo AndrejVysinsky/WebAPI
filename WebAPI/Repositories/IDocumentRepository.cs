@@ -1,4 +1,4 @@
-﻿using WebAPI.Domain;
+﻿using WebAPI.Data;
 
 namespace WebAPI.Repositories
 {

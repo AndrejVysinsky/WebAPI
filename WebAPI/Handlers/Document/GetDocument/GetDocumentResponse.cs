@@ -1,7 +1,9 @@
 ﻿namespace WebAPI.Handlers.Document.GetDocument
 {
-    public class GetDocumentResponse : Response
+    public class GetDocumentResponse
     {
-        public Domain.Document Document { get; set; } = new();
+        public int DocumentId { get; init; }
+        public List<string> Tags { get; init; } = [];
+        public string Data { get; init; } = string.Empty;
     }
 }
