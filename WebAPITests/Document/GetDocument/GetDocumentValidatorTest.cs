@@ -1,27 +1,27 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
-using WebAPI.Handlers.Document.Validation;
-using WebAPI.Domain;
+using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Repositories;
+using Xunit;
 
-namespace WebAPITests
+namespace WebAPITests.Document.GetDocument
 {
-    [TestClass]
-    public class DocumentValidatorTest
+    public class GetDocumentValidatorTest
     {
-        [TestMethod]
+        [Fact]
         public void Validate_WithValidDocument_ShouldNotHaveValidationError()
         {
             //Arrange
-            var document = new Document { Id = 1, Tags = ["tag1", "tag2"], Data = "Some data" };
+            var request = new GetDocumentRequest() { Id = 1 };
+            var document = new WebAPI.Data.Document { Id = 1, Tags = "tag1,tag2", Data = "Some data" };
 
             var documentRepositoryMock = new Mock<IDocumentRepository>();
             documentRepositoryMock.Setup(repo => repo.GetDocument(It.IsAny<int>())).ReturnsAsync(document);
 
-            var validator = new DocumentValidator(documentRepositoryMock.Object);
+            var validator = new GetDocumentRequestValidator(documentRepositoryMock.Object);
 
             //Act
-            var result = validator.TestValidate(document, x => x.IncludeRuleSets("OnGet"));
+            var result = validator.TestValidate(request);
 
             //Assert
             result.ShouldNotHaveAnyValidationErrors();
