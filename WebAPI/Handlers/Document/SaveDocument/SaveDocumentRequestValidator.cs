@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WebAPI.Common.Validation;
 using WebAPI.Domain;
 using WebAPI.Repositories;
 
@@ -14,12 +15,17 @@ namespace WebAPI.Handlers.Document.SaveDocument
 
             RuleFor(x => x.DocumentId)
                 .NotEmpty()
+                .WithMessage(DocumentErrors.IdCannotBeEmpty)
                 .Must(NotExists)
-                .WithMessage("Document id already exists.");
+                .WithMessage(DocumentErrors.IdAlreadyExists);
 
-            RuleFor(x => x.Tags).NotEmpty();
+            RuleFor(x => x.Tags)
+                .NotEmpty()
+                .WithMessage(DocumentErrors.TagsCannotBeEmpty);
 
-            RuleFor(x => x.Data).NotEmpty();
+            RuleFor(x => x.Data)
+                .NotEmpty()
+                .WithMessage(DocumentErrors.DataCannotBeEmpty);
         }
 
         private bool NotExists(int id)

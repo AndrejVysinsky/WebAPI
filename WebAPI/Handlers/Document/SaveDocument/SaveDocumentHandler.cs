@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using ErrorOr;
+using MediatR;
 using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.SaveDocument
 {
-    public class SaveDocumentHandler : IRequestHandler<SaveDocumentRequest, int>
+    public class SaveDocumentHandler : IRequestHandler<SaveDocumentRequest, ErrorOr<int>>
     {
         private readonly IDocumentRepository _documentRepository;
 
@@ -12,7 +13,7 @@ namespace WebAPI.Handlers.Document.SaveDocument
             _documentRepository = documentRepository;
         }
 
-        public async Task<int> Handle(SaveDocumentRequest request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<int>> Handle(SaveDocumentRequest request, CancellationToken cancellationToken)
         {
             var document = new Data.Document()
             {

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WebAPI.Common.Validation;
 using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.UpdateDocument
@@ -13,12 +14,18 @@ namespace WebAPI.Handlers.Document.UpdateDocument
 
             RuleFor(x => x.DocumentId)
                 .NotEmpty()
+                .WithMessage(DocumentErrors.IdCannotBeEmpty)
                 .Must(Exists)
-                .WithMessage("Document id does not exist.");
+                .WithMessage(DocumentErrors.IdNotFound)
+                .WithErrorCode(ErrorCodes.NotFound);
 
-            RuleFor(x => x.Tags).NotEmpty();
+            RuleFor(x => x.Tags)
+                .NotEmpty()
+                .WithMessage(DocumentErrors.TagsCannotBeEmpty);
 
-            RuleFor(x => x.Data).NotEmpty();
+            RuleFor(x => x.Data)
+                .NotEmpty()
+                .WithMessage(DocumentErrors.DataCannotBeEmpty);
         }
 
         private bool Exists(int id)

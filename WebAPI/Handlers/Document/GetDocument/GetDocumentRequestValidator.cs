@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WebAPI.Common.Validation;
 using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.GetDocument
@@ -13,8 +14,10 @@ namespace WebAPI.Handlers.Document.GetDocument
 
             RuleFor(x => x.Id)
                 .NotEmpty()
+                .WithMessage(DocumentErrors.IdCannotBeEmpty)
                 .Must(Exists)
-                .WithMessage("Document id does not exist.");
+                .WithMessage(DocumentErrors.IdNotFound)
+                .WithErrorCode(ErrorCodes.NotFound);
         }
 
         private bool Exists(int id)

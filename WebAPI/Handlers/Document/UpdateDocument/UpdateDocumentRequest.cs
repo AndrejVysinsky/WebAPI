@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using ErrorOr;
+using MediatR;
 
 namespace WebAPI.Handlers.Document.UpdateDocument
 {
-    public class UpdateDocumentRequest : IRequest<int>
+    public class UpdateDocumentRequest : IRequest<ErrorOr<int>>
     {
         public int DocumentId { get; set; }
         public List<string> Tags { get; set; } = [];

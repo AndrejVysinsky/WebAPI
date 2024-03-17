@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Handlers.Document.GetDocument;
 using WebAPI.Handlers.Document.SaveDocument;
@@ -8,7 +9,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentsController : ControllerBase
+    public class DocumentsController : ApiController
     {
         private readonly IMediator _mediator;
 
@@ -18,21 +19,24 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public Task<int> SaveDocument(SaveDocumentRequest request)
+        public async Task<IActionResult> SaveDocument(SaveDocumentRequest request)
         {
-            return _mediator.Send(request);
+            var result = await _mediator.Send(request);
+            return result.Match(documentId => Ok(documentId), Problem);
         }
 
         [HttpPut]
-        public Task<int> UpdateDocument(UpdateDocumentRequest request)
+        public async Task<IActionResult> UpdateDocument(UpdateDocumentRequest request)
         {
-            return _mediator.Send(request);
+            var result = await _mediator.Send(request);
+            return result.Match(documentId => Ok(documentId), Problem);
         }
 
         [HttpGet("{id}")]
-        public Task<GetDocumentResponse> GetDocument(int id)
+        public async Task<IActionResult> GetDocument(int id)
         {
-            return _mediator.Send(new GetDocumentRequest { Id = id });
+            var result = await _mediator.Send(new GetDocumentRequest { Id = id });
+            return result.Match(Ok, Problem);
         }
     }
 }

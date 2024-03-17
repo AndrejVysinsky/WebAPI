@@ -1,11 +1,14 @@
 ﻿using FluentValidation.Results;
 using FluentValidation;
 using MediatR;
+using ErrorOr;
+using WebAPI.Common.Validation;
 
 namespace WebAPI.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -31,7 +34,16 @@ namespace WebAPI.Behaviors
 
                 if (failures.Count != 0)
                 {
-                    throw new ValidationException(failures);
+                    var errors = failures.Select(error =>
+                    {
+                        return error.ErrorCode switch
+                        {
+                            ErrorCodes.NotFound => Error.NotFound(error.PropertyName, error.ErrorMessage),
+                            _ => Error.Validation(error.PropertyName, error.ErrorMessage)
+                        };
+                    }).ToList();
+
+                    return (dynamic)errors;
                 }
             }
 

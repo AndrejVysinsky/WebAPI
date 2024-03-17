@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using ErrorOr;
+using MediatR;
 using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.UpdateDocument
 {
-    public class UpdateDocumentHandler : IRequestHandler<UpdateDocumentRequest, int>
+    public class UpdateDocumentHandler : IRequestHandler<UpdateDocumentRequest, ErrorOr<int>>
     {
         private readonly IDocumentRepository _documentRepository;
 
@@ -12,7 +13,7 @@ namespace WebAPI.Handlers.Document.UpdateDocument
             _documentRepository = documentRepository;
         }
 
-        public async Task<int> Handle(UpdateDocumentRequest request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<int>> Handle(UpdateDocumentRequest request, CancellationToken cancellationToken)
         {
             var document = await _documentRepository.GetDocument(request.DocumentId);
 
