@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
-using WebAPI.Domain;
+using WebAPI.Data;
 
 namespace WebAPI.Repositories
 {
-    public class JsonDocumentRepository
+    public class JsonDocumentRepository : IDocumentRepository
     {
         private readonly string _filePath;
         private readonly IMemoryCache _cache;
