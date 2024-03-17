@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using WebAPI.Common.Validation;
-using WebAPI.Domain;
 using WebAPI.Repositories;
 
 namespace WebAPI.Handlers.Document.SaveDocument
